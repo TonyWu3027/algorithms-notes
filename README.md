@@ -24,5 +24,5 @@ by Robert Sedgewick and Kevin Wayne
 
 `./pdf/`: the exported PDFs from the `.md` files are placed in this directory
 
-## Coursera
-(Algorithms, Part I)[https://www.coursera.org/learn/algorithms-part1/]
+## Coursera Page
+[Algorithms, Part I](https://www.coursera.org/learn/algorithms-part1/)
