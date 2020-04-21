@@ -1,11 +1,12 @@
 import edu.princeton.cs.algs4.StdOut;
 import java.util.Arrays;
 
-public class BruteCollinearPoints {
+public class FastCollinearPoints {
     private int numberOfSegments;
     private LineSegment[] segments;
-    public BruteCollinearPoints(Point[] points) {
-        // finds all line segments containing 4 points
+
+    public FastCollinearPoints(Point[] points) {
+        // finds all line segments containing 4 or more points
         if (points == null) {
             throw new IllegalArgumentException("The argument shall not be null");
         }
@@ -15,21 +16,42 @@ public class BruteCollinearPoints {
             if (points[i].compareTo(points[i+1]) == 0) throw new IllegalArgumentException("The points should be distinctive");
         }
 
-        Arrays.sort(points);
+
 
         segments = new LineSegment[points.length];
         numberOfSegments = 0;
 
-        for (int i = 0; i <= points.length-4; i++)
-            for (int j = i+1; j <= points.length-3; j++)
-                for (int k = j+1; k <= points.length-2; k++)
-                    for (int m = k+1; m <= points.length-1; m++)
-                        if (Math.abs(points[i].slopeTo(points[j])) == Math.abs(points[i].slopeTo(points[k]))
-                                && Math.abs(points[i].slopeTo(points[j])) == Math.abs(points[i].slopeTo(points[m]))) {
-                            segments[numberOfSegments++] = new LineSegment(points[i], points[m]);
-                        }
+        Point[] tempPoints = points;
 
+        for (int i = 0; i < points.length; i++) {
+            // Arrays.sort(tempPoints);
 
+            // for (Point each: points) {
+            //     StdOut.println(each.toString());
+            // }
+            // StdOut.println("end \n");
+
+            Arrays.sort(tempPoints, points[i].slopeOrder());
+
+            for (Point each: tempPoints) {
+                StdOut.println(each.toString());
+            }
+            StdOut.println("next \n");
+        }
+
+        // while (i < points.length-3) {
+        //
+        //
+        //     int j = i + 1;
+        //     if (points[i].slopeTo(points[j]) == points[i].slopeTo(points[j+1])) {
+        //         j++;
+        //     }
+        //
+        //     if (j >= i+3) {
+        //         segments[numberOfSegments++] = new LineSegment(points[i], points[j]);
+        //     }
+        //     i = j;
+        // }
     }
     public           int numberOfSegments()  {
         return numberOfSegments;
@@ -46,16 +68,14 @@ public class BruteCollinearPoints {
     public static void main(String[] args) {
         Point[] myPoints = new Point[] { new Point(4, 4),
                                          new Point(1, 1),
-                                         new Point(1, 1),
                                          new Point(3, 3),
                                          new Point(2, 2),
                                          new Point(5, 3),
-                                          };
+                                         };
 
-        BruteCollinearPoints col = new BruteCollinearPoints(myPoints);
+        FastCollinearPoints col = new FastCollinearPoints(myPoints);
         for (LineSegment each: col.segments()) {
             StdOut.println(each.toString());
         }
-
     }
 }
