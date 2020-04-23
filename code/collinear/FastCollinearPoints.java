@@ -1,4 +1,5 @@
 import edu.princeton.cs.algs4.StdOut;
+
 import java.util.Arrays;
 
 public class FastCollinearPoints {
@@ -11,9 +12,12 @@ public class FastCollinearPoints {
             throw new IllegalArgumentException("The argument shall not be null");
         }
 
+
         for (int i = 0; i < points.length - 1; i++) {
-            if (points[i] == null) throw new IllegalArgumentException("The points shall not be null");
-            if (points[i].compareTo(points[i+1]) == 0) throw new IllegalArgumentException("The points should be distinctive");
+            for (int j = i+1; j < points.length; j++) {
+                if (points[i] == null || points[j] == null) throw new IllegalArgumentException("The points shall not be null");
+                else if (points[i].compareTo(points[j]) == 0) throw new IllegalArgumentException("The points should be unique");
+            }
         }
 
 
@@ -21,37 +25,47 @@ public class FastCollinearPoints {
         segments = new LineSegment[points.length];
         numberOfSegments = 0;
 
-        Point[] tempPoints = points;
+        Arrays.sort(points);
+
+
+        Point[] pivotedPoints = new Point[points.length];
+
 
         for (int i = 0; i < points.length; i++) {
-            // Arrays.sort(tempPoints);
 
-            // for (Point each: points) {
+
+            for (int m = 0; m < points.length; m++) {
+                pivotedPoints[m] = points[m];
+            }
+
+            Arrays.sort(pivotedPoints, points[i].slopeOrder());
+
+            // for (Point each: pivotedPoints) {
             //     StdOut.println(each.toString());
             // }
-            // StdOut.println("end \n");
 
-            Arrays.sort(tempPoints, points[i].slopeOrder());
+            StdOut.println("Piviot: " + points[i].toString());
 
-            for (Point each: tempPoints) {
-                StdOut.println(each.toString());
+
+            for (int j = 1; j < points.length - 2; j++) {
+                if (points[i].slopeTo(pivotedPoints[j]) == points[i].slopeTo(pivotedPoints[j+1]) && points[i].slopeTo(pivotedPoints[j]) == points[i].slopeTo(pivotedPoints[j+2])) {
+                    if (points[i].compareTo(pivotedPoints[j]) < 0) {
+                        int k = j + 2;
+                        while (k < points.length - 1
+                                && points[i].slopeTo(pivotedPoints[k]) == points[i]
+                                .slopeTo(pivotedPoints[k + 1])) {
+                            StdOut.println("Found: " + pivotedPoints[k].toString());
+
+                            k++;
+
+                        }
+                        StdOut.println("k: "+k);
+                        StdOut.println("Num: " + numberOfSegments);
+                        segments[numberOfSegments++] = new LineSegment(points[i], pivotedPoints[k]);
+                    }
+                }
             }
-            StdOut.println("next \n");
         }
-
-        // while (i < points.length-3) {
-        //
-        //
-        //     int j = i + 1;
-        //     if (points[i].slopeTo(points[j]) == points[i].slopeTo(points[j+1])) {
-        //         j++;
-        //     }
-        //
-        //     if (j >= i+3) {
-        //         segments[numberOfSegments++] = new LineSegment(points[i], points[j]);
-        //     }
-        //     i = j;
-        // }
     }
     public           int numberOfSegments()  {
         return numberOfSegments;
@@ -65,17 +79,21 @@ public class FastCollinearPoints {
         return collinear;
     }
 
-    public static void main(String[] args) {
-        Point[] myPoints = new Point[] { new Point(4, 4),
-                                         new Point(1, 1),
-                                         new Point(3, 3),
-                                         new Point(2, 2),
-                                         new Point(5, 3),
-                                         };
-
-        FastCollinearPoints col = new FastCollinearPoints(myPoints);
-        for (LineSegment each: col.segments()) {
-            StdOut.println(each.toString());
-        }
-    }
+    // public static void main(String[] args) {
+    //     Point[] myPoints = new Point[] { new Point(4, 4),
+    //                                      new Point(1, 1),
+    //                                      new Point(3, 3),
+    //                                      new Point(2, 2),
+    //                                      new Point(5, 3),
+    //                                      new Point(2, 3),
+    //                                      new Point(3, 4),
+    //                                      new Point(4, 5),
+    //                                      new Point(5, 6)
+    //                                      };
+    //
+    //     FastCollinearPoints col = new FastCollinearPoints(myPoints);
+    //     for (LineSegment each: col.segments()) {
+    //         StdOut.println(each.toString());
+    //     }
+    // }
 }

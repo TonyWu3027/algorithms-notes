@@ -10,9 +10,12 @@ public class BruteCollinearPoints {
             throw new IllegalArgumentException("The argument shall not be null");
         }
 
+
         for (int i = 0; i < points.length - 1; i++) {
-            if (points[i] == null) throw new IllegalArgumentException("The points shall not be null");
-            if (points[i].compareTo(points[i+1]) == 0) throw new IllegalArgumentException("The points should be distinctive");
+            for (int j = i+1; j < points.length; j++) {
+                if (points[i] == null || points[j] == null) throw new IllegalArgumentException("The points shall not be null");
+                else if (points[i].compareTo(points[j]) == 0) throw new IllegalArgumentException("The points should be unique");
+            }
         }
 
         Arrays.sort(points);
@@ -26,6 +29,7 @@ public class BruteCollinearPoints {
                     for (int m = k+1; m <= points.length-1; m++)
                         if (Math.abs(points[i].slopeTo(points[j])) == Math.abs(points[i].slopeTo(points[k]))
                                 && Math.abs(points[i].slopeTo(points[j])) == Math.abs(points[i].slopeTo(points[m]))) {
+                            StdOut.println(points[i].toString()+"->"+points[j].toString()+"->"+points[k].toString()+"->"+points[m].toString());
                             segments[numberOfSegments++] = new LineSegment(points[i], points[m]);
                         }
 
@@ -50,7 +54,9 @@ public class BruteCollinearPoints {
                                          new Point(3, 3),
                                          new Point(2, 2),
                                          new Point(5, 3),
+                                         null
                                           };
+
 
         BruteCollinearPoints col = new BruteCollinearPoints(myPoints);
         for (LineSegment each: col.segments()) {
